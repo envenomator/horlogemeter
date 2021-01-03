@@ -13,3 +13,4 @@ _deps
 *.o
 *.hex
 *.map
+*.hex
