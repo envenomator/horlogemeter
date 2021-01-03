@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name Venema)(type Legacy)(uri ${KIPRJMOD}/Venema.lib)(options "")(descr ""))
+)

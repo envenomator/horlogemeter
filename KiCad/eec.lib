@@ -1,0 +1,82 @@
+EESchema-LIBRARY Version 2.4
+#encoding utf-8
+#
+# Texas Instruments OPA37GP
+#
+DEF OPA37GP U 0 40 Y Y 1 L N
+F0 "U" 0 100 50 H V L CNN 
+F1 "OPA37GP" 0 200 50 H V L CNN 
+F2 "Texas_Instruments-OPA37GP-*" 0 300 50 H I L CNN 
+F3 "http://www.ti.com/lit/ds/symlink/opa37.pdf" 0 400 50 H I L CNN 
+F4 "" 0 500 50 H I L CNN "2nd HarmonicdBc"
+F5 "" 0 600 50 H I L CNN "3rd HarmonicdBc"
+F6 "" 0 700 50 H I L CNN "Acl min stable gainVV"
+F7 "" 0 800 50 H I L CNN "BW  AclMHz"
+F8 "100" 0 900 50 H I L CNN "CMRR Mind B"
+F9 "MS-001" 0 1000 50 H I L CNN "Code  JEDEC"
+F10 "Manufacturer URL" 0 1100 50 H I L CNN "Component Link 1 Description"
+F11 "http://www.ti.com/" 0 1200 50 H I L CNN "Component Link 1 URL"
+F12 "Package Specification" 0 1300 50 H I L CNN "Component Link 3 Description"
+F13 "http://www.ti.com/litv/pdf/mpdi001b" 0 1400 50 H I L CNN "Component Link 3 URL"
+F14 "SBOS135C" 0 1500 50 H I L CNN "Datasheet Version"
+F15 "" 0 1600 50 H I L CNN "Diff Gain"
+F16 "" 0 1700 50 H I L CNN "Diff Phasedeg"
+F17 "63" 0 1800 50 H I L CNN "GBW Typ MHz"
+F18 "" 0 1900 50 H I L CNN "Iib Maxn A"
+F19 "" 0 2000 50 H I L CNN "Io Typm A"
+F20 "5.7" 0 2100 50 H I L CNN "Iq per channelMaxmA"
+F21 "Through Hole" 0 2200 50 H I L CNN "Mounting Technology"
+F22 "1" 0 2300 50 H I L CNN "Number of Channels"
+F23 "0.4" 0 2400 50 H I L CNN "Offset DriftTypuVC"
+F24 "8-Pin Plastic In-Line, Body 9.59 x 6.35 mm, Pitch 2.54 mm" 0 2500 50 H I L CNN "Package Description"
+F25 "4040082/E, 04/2010" 0 2600 50 H I L CNN "Package Version"
+F26 "TUBE" 0 2700 50 H I L CNN "Packing"
+F27 "" 0 2800 50 H I L CNN "Rail  Rail"
+F28 "Catalog" 0 2900 50 H I L CNN "Rating"
+F29 "" 0 3000 50 H I L CNN "Settling Time 01Typns"
+F30 "11.9" 0 3100 50 H I L CNN "Slew RateTypVus"
+F31 "High Speed Amplifier (>=50MHz), High Supply Voltage Amplifier (>=30V), Low Noise Amp (<=10nV/rtHz), Low Offset Voltage Amplifier (<=500uV)" 0 3200 50 H I L CNN "Sub Family"
+F32 "" 0 3300 50 H I L CNN "THD Fc is 1 MHzTypdB"
+F33 "44" 0 3400 50 H I L CNN "Total Supply VoltageMax5V is 5  5V is 10"
+F34 "8" 0 3500 50 H I L CNN "Total Supply VoltageMin5V is 5  5V is 10"
+F35 "0.1" 0 3600 50 H I L CNN "Vio 25CMaxmV"
+F36 "" 0 3700 50 H I L CNN "Vio Maxm V"
+F37 "" 0 3800 50 H I L CNN "Vmax V"
+F38 "" 0 3900 50 H I L CNN "Vmin V"
+F39 "" 0 4000 50 H I L CNN "Vn at FlatbandTypnVrtHz"
+F40 "" 0 4100 50 H I L CNN "Vs Max V"
+F41 "" 0 4200 50 H I L CNN "Vs Min V"
+F42 "" 0 4300 50 H I L CNN "MHz"
+F43 "IC" 0 4400 50 H I L CNN "category"
+F44 "13614051" 0 4500 50 H I L CNN "ciiva ids"
+F45 "a00c97b3d905a4d8" 0 4600 50 H I L CNN "library id"
+F46 "Texas Instruments" 0 4700 50 H I L CNN "manufacturer"
+F47 "P0008A" 0 4800 50 H I L CNN "package"
+F48 "1464165436" 0 4900 50 H I L CNN "release date"
+F49 "Yes" 0 5000 50 H I L CNN "rohs"
+F50 "093E46CD-EBC2-49AA-8CB4-9058A86338CA" 0 5100 50 H I L CNN "vault revision"
+F51 "yes" 0 5200 50 H I L CNN "imported"
+DRAW
+X OFFSET TRIM 1 100 0 100 R 40 0 1 1 I 
+X IN- 2 100 -200 100 R 40 0 1 1 I 
+X IN+ 3 100 -400 100 R 40 0 1 1 I 
+X VCC- 4 400 -600 100 U 40 0 1 1 W 
+X NC 5 700 -500 100 L 40 0 1 1 P 
+X OUT 6 700 -300 100 L 40 0 1 1 O 
+X VCC+ 7 400 0 100 D 40 0 1 1 W 
+X OFFSET TRIM 8 100 -600 100 R 40 0 1 1 I 
+P 2 1 1 0 200 -100 600 -300 N
+P 2 1 1 0 200 -500 600 -300 N
+P 2 1 1 0 200 -100 200 -500 N
+P 2 1 1 0 240 -200 300 -200 N
+P 2 1 1 0 240 -400 300 -400 N
+P 2 1 1 0 270 -370 270 -430 N
+P 2 1 1 0 400 -100 400 -200 N
+P 2 1 1 0 400 -400 400 -500 N
+P 2 1 1 0 500 -350 600 -500 N
+P 2 1 1 0 260 -130 200 0 N
+P 2 1 1 0 260 -470 200 -600 N
+ENDDRAW
+ENDDEF
+#
+# End Library

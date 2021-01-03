@@ -1,0 +1,7 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP OPA37GP
+D OPA37GP
+F http://www.ti.com/lit/ds/symlink/opa37.pdf
+$ENDCMP
+# end doc library
