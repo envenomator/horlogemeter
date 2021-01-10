@@ -5,15 +5,15 @@
 ##########------------------------------------------------------##########
 
 MCU   = atmega328p
-F_CPU = 8000000UL
+F_CPU = 16000000UL
 BAUD  = 9600UL
 ## Also try BAUD = 19200 or 38400 if you're feeling lucky.
 
 ## A directory for common include files and the simple USART library.
 ## If you move either the current folder or the Library folder, you'll 
 ##  need to change this path to match.
-LIBDIR = ../AVR-Programming/AVR-Programming-Library
-
+## LIBDIR = ../AVR-Programming/AVR-Programming-Library
+LIBDIR = .
 ##########------------------------------------------------------##########
 ##########                 Programmer Defaults                  ##########
 ##########          Set up once, then forget about it           ##########
@@ -30,6 +30,7 @@ PROGRAMMER_ARGS = -P /dev/ttyACM0
 ##########------------------------------------------------------##########
 
 CC = avr-gcc
+##CC = avr-c++
 OBJCOPY = avr-objcopy
 OBJDUMP = avr-objdump
 AVRSIZE = avr-size
@@ -59,6 +60,7 @@ HEADERS=$(SOURCES:.c=.h)
 ## Compilation options, type man avr-gcc if you're curious.
 CPPFLAGS = -DF_CPU=$(F_CPU) -DBAUD=$(BAUD) -I. -I$(LIBDIR)
 CFLAGS = -Os -g -std=gnu99 -Wall
+##CFLAGS = -Os -g -Wall
 ## Use short (8-bit) data types 
 CFLAGS += -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums 
 ## Splits up object files per function
