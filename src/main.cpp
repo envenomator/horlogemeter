@@ -15,6 +15,7 @@ Given a tick4 watch, it takes two (2) seconds for the array to display 100% sens
 #include <avr/interrupt.h>
 #include <avr/power.h>
 #include <Arduino.h>
+#include <LiquidCrystal_I2C.h>
 
 #define TICKSAMPLES 10
 #define SENSORSAMPLES 10
@@ -49,6 +50,8 @@ tickavg avg;
 double secperday;
 double averageticktime;
 double avglength;   // length of the EWMA running average (16/64/128 etc)
+LiquidCrystal_I2C lcd(0x3f,20,4);
+char displaytext[21]; 
 
 void clearSensorArrays(void) {
     uint8_t i;
@@ -124,10 +127,20 @@ void setup() {
   Serial.begin(9600);
   clearSensorArrays();
   initCounter1();
+  lcd.init();
+  lcd.backlight();
+  lcd.clear();
 //  initInterrupt0();
   
   Serial.println();
   Serial.println("== Sensor readings ==");
+  lcd.printf("+------------------+");
+  lcd.setCursor(0,1);
+  lcd.printf("|   Horlogemeter   |");
+  lcd.setCursor(0,2);
+  lcd.printf("|                  |");
+  lcd.setCursor(0,3);
+  lcd.printf("+------------------+");
   attachInterrupt(digitalPinToInterrupt(2), interrupt0, RISING);
 }
 
@@ -180,6 +193,9 @@ void loop() {
   }
   if(ticks == 0)
   {
+    lcd.clear(); 
+    lcd.setCursor(4,1);
+    lcd.printf("Geen signaal");
     Serial.printf("Run %3d - No watch signal detected\r\n",counter);
     maxsignalloss += 1; // signal lost in this period, set counter
     if(maxsignalloss > 5)
@@ -200,6 +216,17 @@ void loop() {
     if(signalacquired > AVGSETTLE)
     {
       // valid signal and average, print out results
+      lcd.clear();
+      snprintf(displaytext,sizeof(displaytext),"Signaal %d%%",quality);
+      lcd.print(displaytext);
+      lcd.setCursor(0,1);
+      snprintf(displaytext,sizeof(displaytext),"%d t/s - %3.2f ms/t",ticks, averageticktime*(1000.0/32768));
+      lcd.print(displaytext);
+      lcd.setCursor(0,2);
+      lcd.printf("%+06.1f sec/dag",secperday);
+      lcd.setCursor(0,3);
+      if(secperday > 0) lcd.printf("             Te snel");
+      else lcd.printf("         Te langzaam");
       Serial.printf("Run %3d - %1d ticks/s - Signal %3d%% - average %4.2f = %3.2f sec/day\r\n",counter,ticks,quality,averageticktime,secperday);
       maxsignalloss = 0; // signal present, so reset counter
 
@@ -218,6 +245,17 @@ void loop() {
     else
     {
       // too few signals, let's wait for the average to clear up a little
+      lcd.clear();
+      snprintf(displaytext,sizeof(displaytext),"Signaal %d%%",quality);
+      lcd.print(displaytext);
+      lcd.setCursor(0,1);
+      snprintf(displaytext,sizeof(displaytext),"%d tikken/s",ticks);
+      lcd.print(displaytext);
+      lcd.setCursor(0,2);
+      lcd.printf("Gemiddelde bepalen");
+      lcd.setCursor(0,3);
+      snprintf(displaytext,sizeof(displaytext),"%d van %d samples", signalacquired, AVGSETTLE);
+      lcd.printf(displaytext);
       Serial.printf("Run %3d - Signal %3d%% acquired, %d ticks/s - settling averages\r\n", counter, quality, ticks);
     }
     
