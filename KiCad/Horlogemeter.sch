@@ -6,7 +6,7 @@ encoding utf-8
 Sheet 1 1
 Title "Horlogemeter"
 Date "2021-01-02"
-Rev "1.0"
+Rev "1.1"
 Comp "Jeroen Venema"
 Comment1 ""
 Comment2 ""
@@ -106,7 +106,7 @@ U 1 1 5FF14B9C
 P 2250 950
 F 0 "J2" V 1783 1000 50  0000 C CNN
 F 1 "AVR-ISP-6" V 1874 1000 50  0000 C CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_2x03_P2.54mm_Vertical" V 2000 1000 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical" V 2000 1000 50  0001 C CNN
 F 3 " ~" H 975 400 50  0001 C CNN
 	1    2250 950 
 	0    1    1    0   
@@ -573,7 +573,7 @@ U 1 1 6005E861
 P 9200 4750
 F 0 "Q1" V 9435 4750 50  0000 C CNN
 F 1 "BC327" V 9526 4750 50  0000 C CNN
-F 2 "Package_TO_SOT_THT:TO-92_Inline" H 9400 4675 50  0001 L CIN
+F 2 "Package_TO_SOT_THT:TO-92_Inline_Wide" H 9400 4675 50  0001 L CIN
 F 3 "http://www.onsemi.com/pub_link/Collateral/BC327-D.PDF" H 9200 4750 50  0001 L CNN
 	1    9200 4750
 	0    1    1    0   
@@ -621,8 +621,6 @@ Connection ~ 7150 6300
 Wire Wire Line
 	6650 5150 6850 5150
 Wire Wire Line
-	5350 6300 6350 6300
-Wire Wire Line
 	6850 5850 6850 6300
 Connection ~ 6850 6300
 Wire Wire Line
@@ -643,15 +641,6 @@ F 3 "~" H 6550 5700 50  0001 C CNN
 	1    6550 5700
 	0    1    1    0   
 $EndComp
-Wire Wire Line
-	6200 5700 6400 5700
-Wire Wire Line
-	6200 5600 6350 5600
-Wire Wire Line
-	6350 5600 6350 6300
-Connection ~ 6350 6300
-Wire Wire Line
-	6350 6300 6850 6300
 $Comp
 L Device:R R1
 U 1 1 600AE261
@@ -1106,7 +1095,7 @@ U 1 1 600343DE
 P 4700 1050
 F 0 "J4" H 4618 725 50  0000 C CNN
 F 1 "12v input" H 4618 816 50  0000 C CNN
-F 2 "" H 4700 1050 50  0001 C CNN
+F 2 "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" H 4700 1050 50  0001 C CNN
 F 3 "~" H 4700 1050 50  0001 C CNN
 	1    4700 1050
 	-1   0    0    1   
@@ -1123,7 +1112,7 @@ U 1 1 6005A601
 P 2350 5250
 F 0 "J3" H 2268 4925 50  0000 C CNN
 F 1 "Piezo microphone" H 2500 5400 50  0000 C CNN
-F 2 "" H 2350 5250 50  0001 C CNN
+F 2 "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" H 2350 5250 50  0001 C CNN
 F 3 "~" H 2350 5250 50  0001 C CNN
 	1    2350 5250
 	-1   0    0    1   
@@ -1132,12 +1121,12 @@ Connection ~ 2550 5150
 $Comp
 L Connector:Screw_Terminal_01x02 J5
 U 1 1 6005D483
-P 6000 5700
-F 0 "J5" H 5918 5375 50  0000 C CNN
-F 1 "Headphones" H 5918 5466 50  0000 C CNN
-F 2 "" H 6000 5700 50  0001 C CNN
-F 3 "~" H 6000 5700 50  0001 C CNN
-	1    6000 5700
+P 6000 5800
+F 0 "J5" H 5918 5475 50  0000 C CNN
+F 1 "Headphones" H 5918 5566 50  0000 C CNN
+F 2 "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" H 6000 5800 50  0001 C CNN
+F 3 "~" H 6000 5800 50  0001 C CNN
+	1    6000 5800
 	-1   0    0    1   
 $EndComp
 $Comp
@@ -1146,7 +1135,7 @@ U 1 1 600653E5
 P 6850 4550
 F 0 "J6" H 6768 4225 50  0000 C CNN
 F 1 "Gain pot 10k" H 6850 4750 50  0000 C CNN
-F 2 "" H 6850 4550 50  0001 C CNN
+F 2 "TerminalBlock:TerminalBlock_bornier-3_P5.08mm" H 6850 4550 50  0001 C CNN
 F 3 "~" H 6850 4550 50  0001 C CNN
 	1    6850 4550
 	-1   0    0    1   
@@ -1170,7 +1159,7 @@ U 1 1 600A1A5D
 P 8950 5950
 F 0 "J8" H 8868 5625 50  0000 C CNN
 F 1 "External LED" H 8868 5716 50  0000 C CNN
-F 2 "" H 8950 5950 50  0001 C CNN
+F 2 "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" H 8950 5950 50  0001 C CNN
 F 3 "~" H 8950 5950 50  0001 C CNN
 	1    8950 5950
 	-1   0    0    1   
@@ -1210,4 +1199,14 @@ Wire Wire Line
 Wire Wire Line
 	950  7500 1900 7500
 NoConn ~ 4050 4900
+Wire Wire Line
+	5350 6300 6200 6300
+Wire Wire Line
+	6200 5700 6400 5700
+Wire Wire Line
+	6200 5800 6200 6300
+Connection ~ 6200 6300
+Wire Wire Line
+	6200 6300 6850 6300
+NoConn ~ 1700 4100
 $EndSCHEMATC
