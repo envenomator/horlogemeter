@@ -106,7 +106,7 @@ U 1 1 5FF14B9C
 P 2250 950
 F 0 "J2" V 1783 1000 50  0000 C CNN
 F 1 "AVR-ISP-6" V 1874 1000 50  0000 C CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_2x03_P2.54mm_Vertical" V 2000 1000 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical" V 2000 1000 50  0001 C CNN
 F 3 " ~" H 975 400 50  0001 C CNN
 	1    2250 950 
 	0    1    1    0   

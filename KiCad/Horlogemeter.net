@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/jeroen/Documents/source/horlogemeter/KiCad/Horlogemeter.sch)
-    (date "Fri 15 Jan 2021 09:27:14 PM CET")
+    (date "Sat 16 Jan 2021 08:25:12 AM CET")
     (tool "Eeschema 5.1.9-73d0e3b20d~88~ubuntu20.04.1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -254,7 +254,7 @@
       (tstamp 60157AFD))
     (comp (ref U4)
       (value L7805)
-      (footprint Package_TO_SOT_THT:TO-220-3_Vertical)
+      (footprint Package_TO_SOT_THT:TO-220-3_Horizontal_TabDown)
       (datasheet http://www.st.com/content/ccc/resource/technical/document/datasheet/41/4f/b3/b0/12/d4/47/88/CD00000444.pdf/files/CD00000444.pdf/jcr:content/translations/en.CD00000444.pdf)
       (libsource (lib Regulator_Linear) (part L7805) (description "Positive 1.5A 35V Linear Regulator, Fixed Output 5V, TO-220/TO-263/TO-252"))
       (sheetpath (names /) (tstamps /))
