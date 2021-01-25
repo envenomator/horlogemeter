@@ -138,7 +138,7 @@ void setup() {
   lcd.setCursor(0,1);
   lcd.printf("|   Horlogemeter   |");
   lcd.setCursor(0,2);
-  lcd.printf("|   Versie 1.1     |");
+  lcd.printf("|   Versie 1.2     |");
   lcd.setCursor(0,3);
   lcd.printf("+------------------+");
   delay(1000);
