@@ -5,8 +5,8 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "Horlogemeter"
-Date "2021-01-02"
-Rev "1.1"
+Date "2021-01-25"
+Rev "1.2"
 Comp "Jeroen Venema"
 Comment1 ""
 Comment2 ""
@@ -527,7 +527,7 @@ U 1 1 6004928C
 P 7600 4450
 F 0 "C16" V 7348 4450 50  0000 C CNN
 F 1 "1u" V 7439 4450 50  0000 C CNN
-F 2 "Capacitor_THT:CP_Radial_D5.0mm_P2.50mm" H 7638 4300 50  0001 C CNN
+F 2 "Capacitor_THT:C_Disc_D3.4mm_W2.1mm_P2.50mm" H 7638 4300 50  0001 C CNN
 F 3 "~" H 7600 4450 50  0001 C CNN
 	1    7600 4450
 	0    1    1    0   
@@ -611,7 +611,7 @@ L Device:R R12
 U 1 1 60076810
 P 9600 5450
 F 0 "R12" H 9670 5496 50  0000 L CNN
-F 1 "10k" H 9670 5405 50  0000 L CNN
+F 1 "1k" H 9670 5405 50  0000 L CNN
 F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 9530 5450 50  0001 C CNN
 F 3 "~" H 9600 5450 50  0001 C CNN
 	1    9600 5450
