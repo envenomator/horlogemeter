@@ -14,13 +14,14 @@ Every interrupt tick, an array of 5/6/10 tick is updated, to calculate the signa
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
 
-#define QUALITYSAMPLES 10
-#define LOSSTIMEOUT 5
+#define QUALITYSAMPLES 10 // number of samples to determine signal quality
+#define LOSSTIMEOUT 5     // number of seconds before full reset after signal loss
 
-#define TICK5LOW    (uint16_t)(32768/5*0.95)
-#define TICK5HIGH   (uint16_t)(32768/5*1.05)
-#define TICK6LOW    (uint16_t)(32768/6*0.95)
-#define TICK6HIGH   (uint16_t)(32768/6*1.05)
+// lower and upper bounds to each tick number
+#define TICK5LOW    (uint16_t)(32768/ 5*0.95)
+#define TICK5HIGH   (uint16_t)(32768/ 5*1.05)
+#define TICK6LOW    (uint16_t)(32768/ 6*0.95)
+#define TICK6HIGH   (uint16_t)(32768/ 6*1.05)
 #define TICK10LOW   (uint16_t)(32768/10*0.95)
 #define TICK10HIGH  (uint16_t)(32768/10*1.05)
 
@@ -28,15 +29,15 @@ struct tick_struct {
   uint32_t pulsecount5;   // counts pulses at 32768/s rate
   uint32_t pulsecount6;
   uint32_t pulsecount10;
-  uint32_t tickcount5;
+  uint32_t tickcount5;    // counts number of ticks
   uint32_t tickcount6;
   uint32_t tickcount10;
-  uint8_t sensor5[QUALITYSAMPLES];
-  uint8_t sensor6[QUALITYSAMPLES];
-  uint8_t sensor10[QUALITYSAMPLES];
+  uint8_t sensor5[QUALITYSAMPLES];  // tallies signal quality in steps of 10% 5 takes 2 seconds to 100%
+  uint8_t sensor6[QUALITYSAMPLES];  //                                        6 takes 1.7 seconds to 100%
+  uint8_t sensor10[QUALITYSAMPLES]; //                                       10 takes 1 second to 100%
 };
 
-// globals used during interrupt routine
+// globals changed during interrupt routine
 volatile tick_struct ticks; 
 volatile uint8_t tickpointer; // points to item in arrray of tick values
 volatile uint16_t ptt; // previously read tick time;
