@@ -14,15 +14,15 @@ Every interrupt tick, an array of 5/6/10 tick is updated, to calculate the signa
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
 
-#define TICKSAMPLES 10
-#define MAXSIGNALLOSS 5
+#define QUALITYSAMPLES 10
+#define LOSSTIMEOUT 5
 
-#define TICK10LOW   3244
-#define TICK10HIGH  3309
-#define TICK6LOW    5188
-#define TICK6HIGH   5734
-#define TICK5LOW    6225
-#define TICK5HIGH   6880
+#define TICK5LOW    (uint16_t)(32768/5*0.95)
+#define TICK5HIGH   (uint16_t)(32768/5*1.05)
+#define TICK6LOW    (uint16_t)(32768/6*0.95)
+#define TICK6HIGH   (uint16_t)(32768/6*1.05)
+#define TICK10LOW   (uint16_t)(32768/10*0.95)
+#define TICK10HIGH  (uint16_t)(32768/10*1.05)
 
 struct tick_struct {
   uint32_t pulsecount5;   // counts pulses at 32768/s rate
@@ -31,9 +31,9 @@ struct tick_struct {
   uint32_t tickcount5;
   uint32_t tickcount6;
   uint32_t tickcount10;
-  uint8_t sensor5[TICKSAMPLES];
-  uint8_t sensor6[TICKSAMPLES];
-  uint8_t sensor10[TICKSAMPLES];
+  uint8_t sensor5[QUALITYSAMPLES];
+  uint8_t sensor6[QUALITYSAMPLES];
+  uint8_t sensor10[QUALITYSAMPLES];
 };
 
 // globals used during interrupt routine
@@ -52,12 +52,12 @@ double secperday;
 LiquidCrystal_I2C lcd(0x3f,20,4);
 char displaytext[21]; 
 
-void clearSensorArrays(void) {
+void clearLog(void) {
     uint8_t i;
     // reset tickpointer to first item in array
     tickpointer = 0;
     // zero-out sensor arrays
-    for(i = 0; i < TICKSAMPLES; i++)
+    for(i = 0; i < QUALITYSAMPLES; i++)
     {
         ticks.sensor5[i] = 0;
         ticks.sensor6[i] = 0;
@@ -98,7 +98,7 @@ void interrupt0() {
 
     if((TICK10LOW < ptt) && (ptt < TICK10HIGH))
     {
-        // Tick 10 found
+        // Watch with tick 10 found
         ticks.tickcount10++;
         ticks.pulsecount10 += ptt;
         ticks.sensor10[tickpointer] = 10;
@@ -107,7 +107,7 @@ void interrupt0() {
     {
         if((TICK6LOW < ptt) && (ptt < TICK6HIGH))
         {
-            // Tick 6 found
+            // Watch with tick 6 found
             ticks.tickcount6++;
             ticks.pulsecount6 += ptt;
             ticks.sensor6[tickpointer] = 10;
@@ -116,7 +116,7 @@ void interrupt0() {
         {
             if((TICK5LOW < ptt) && (ptt < TICK5HIGH))
             {
-                // Tick 5 found
+                // Watch with tick 5 found
                 ticks.tickcount5++;
                 ticks.pulsecount5 += ptt;
                 ticks.sensor5[tickpointer] = 10;
@@ -125,12 +125,12 @@ void interrupt0() {
     }
     // next iteration to indicate change in signal quality
     tickpointer++;
-    if(tickpointer > TICKSAMPLES-1) tickpointer = 0; // rollover
+    if(tickpointer >= QUALITYSAMPLES) tickpointer = 0; // rollover
 }
 
 void setup() {
   Serial.begin(9600);
-  clearSensorArrays();
+  clearLog();
   initCounter1();
   lcd.init();
   lcd.backlight();
@@ -151,27 +151,26 @@ void loop() {
 
   delay(1000);
 
-  // tally sensor values
+  // assume we have not found a Watch tick number
+  current_ticks = 0;
+  quality = 0;
+
+  // tally sensor quality values
   temp5 = 0;
   temp6 = 0;
   temp10 = 0;
-  for(i = 0; i < TICKSAMPLES; i++)
+  for(i = 0; i < QUALITYSAMPLES; i++)
   {
     temp5 += ticks.sensor5[i];
     temp6 += ticks.sensor6[i];
     temp10 += ticks.sensor10[i];
   }
 
-  // assume we have not found a tick number
-  current_ticks = 0;
-  quality = 0;
-
   // Check which tick sensor gives the highest value and set tick number to it
   if(temp5 > temp6 && temp5 > temp10)
   {
     current_ticks = 5;
     quality = temp5;
-    // fast read to avoid race condition
     pulsecount = ticks.pulsecount5;
     tickcount  = ticks.tickcount5;
   }
@@ -179,7 +178,6 @@ void loop() {
   {
       current_ticks = 6;
       quality = temp6;
-      // fast read to avoid race condition
       pulsecount = ticks.pulsecount6;
       tickcount  = ticks.tickcount6;
   }
@@ -187,7 +185,6 @@ void loop() {
   {
       current_ticks = 10;
       quality = temp10;
-      // fast read to avoid race condition
       pulsecount = ticks.pulsecount10;
       tickcount  = ticks.tickcount10;
   }
@@ -197,11 +194,11 @@ void loop() {
     lcd.clear(); 
     lcd.setCursor(4,1);
     lcd.printf("Geen signaal");
-    maxsignalloss += 1; // signal lost in this period, set counter
-    if(maxsignalloss > MAXSIGNALLOSS)
+    maxsignalloss += 1; // advance signal loss timeout value
+    if(maxsignalloss > LOSSTIMEOUT)
     {
       // reset all counters and re-acquire signal
-      clearSensorArrays(); // reset all sensors for re-acquiry
+      clearLog(); // reset all sensors for re-acquiry
       maxsignalloss = 0;
     }
   }
