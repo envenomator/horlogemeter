@@ -140,7 +140,7 @@ void setup() {
   lcd.setCursor(0,1);
   lcd.printf("|   Horlogemeter   |");
   lcd.setCursor(0,2);
-  lcd.printf("|   Versie 1.3     |");
+  lcd.printf("|   Versie 2.0     |");
   lcd.setCursor(0,3);
   lcd.printf("+------------------+");
   delay(1000);
@@ -161,7 +161,13 @@ void loop() {
     temp6 += ticks.sensor6[i];
     temp10 += ticks.sensor10[i];
   }
-  if(temp5 >= 50)
+
+  // assume we have not found a tick number
+  current_ticks = 0;
+  quality = 0;
+
+  // Check which tick sensor gives the highest value and set tick number to it
+  if(temp5 > temp6 && temp5 > temp10)
   {
     current_ticks = 5;
     quality = temp5;
@@ -169,33 +175,23 @@ void loop() {
     pulsecount = ticks.pulsecount5;
     tickcount  = ticks.tickcount5;
   }
-  else
+  if(temp6 > temp5 && temp6 > temp10)
   {
-    if(temp6 >= 50)
-    {
-        current_ticks = 6;
-        quality = temp6;
-        // fast read to avoid race condition
-        pulsecount = ticks.pulsecount6;
-        tickcount  = ticks.tickcount6;
-    }
-    else
-    {
-        if(temp10 >= 50)
-        {
-            current_ticks = 10;
-            quality = temp10;
-            // fast read to avoid race condition
-            pulsecount = ticks.pulsecount10;
-            tickcount  = ticks.tickcount10;
-        }
-        else 
-        {
-          current_ticks = 0;
-          quality = 0;
-        }
-    }
+      current_ticks = 6;
+      quality = temp6;
+      // fast read to avoid race condition
+      pulsecount = ticks.pulsecount6;
+      tickcount  = ticks.tickcount6;
   }
+  if(temp10 > temp5 && temp10 > temp6)
+  {
+      current_ticks = 10;
+      quality = temp10;
+      // fast read to avoid race condition
+      pulsecount = ticks.pulsecount10;
+      tickcount  = ticks.tickcount10;
+  }
+
   if(current_ticks == 0)
   {
     lcd.clear(); 
