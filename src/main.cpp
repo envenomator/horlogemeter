@@ -15,15 +15,16 @@ Every interrupt tick, an array of 5/6/10 tick is updated, to calculate the signa
 #include <LiquidCrystal_I2C.h>
 
 #define QUALITYSAMPLES 10 // number of samples to determine signal quality
-#define LOSSTIMEOUT 5     // number of seconds before full reset after signal loss
+#define LOSSTIMEOUT 2     // number of seconds before full reset after signal loss
+#define SIGNALTHRESHOLD 20
 
 // lower and upper bounds to each tick number
-#define TICK5LOW    (uint16_t)(32768/ 5*0.95)
-#define TICK5HIGH   (uint16_t)(32768/ 5*1.05)
-#define TICK6LOW    (uint16_t)(32768/ 6*0.95)
-#define TICK6HIGH   (uint16_t)(32768/ 6*1.05)
-#define TICK10LOW   (uint16_t)(32768/10*0.95)
-#define TICK10HIGH  (uint16_t)(32768/10*1.05)
+#define TICK5LOW    (uint16_t)(32768/ 5*0.91)
+#define TICK5HIGH   (uint16_t)(32768/ 5*1.09)
+#define TICK6LOW    (uint16_t)(32768/ 6*0.91)
+#define TICK6HIGH   (uint16_t)(32768/ 6*1.09)
+#define TICK10LOW   (uint16_t)(32768/10*0.91)
+#define TICK10HIGH  (uint16_t)(32768/10*1.09)
 
 struct tick_struct {
   uint32_t pulsecount5;   // counts pulses at 32768/s rate
@@ -50,8 +51,9 @@ uint8_t current_ticks = 0;
 uint16_t maxsignalloss = 0;
 
 double secperday;
+int minperday;
+
 LiquidCrystal_I2C lcd(0x3f,20,4);
-char displaytext[21]; 
 
 void clearLog(void) {
     uint8_t i;
@@ -130,7 +132,7 @@ void interrupt0() {
 }
 
 void setup() {
-  Serial.begin(9600);
+  // Serial.begin(9600);
   clearLog();
   initCounter1();
   lcd.init();
@@ -141,7 +143,7 @@ void setup() {
   lcd.setCursor(0,1);
   lcd.printf("|   Horlogemeter   |");
   lcd.setCursor(0,2);
-  lcd.printf("|   Versie 2.0     |");
+  lcd.printf("|   Versie 2.1     |");
   lcd.setCursor(0,3);
   lcd.printf("+------------------+");
   delay(1000);
@@ -190,7 +192,7 @@ void loop() {
       tickcount  = ticks.tickcount10;
   }
 
-  if(current_ticks == 0)
+  if(quality <= SIGNALTHRESHOLD)
   {
     lcd.clear(); 
     lcd.setCursor(4,1);
@@ -206,21 +208,46 @@ void loop() {
   else
   {
     // valid signal and average, calculate and print out results
-    // calculate delta pulses per tick first (expected # pulses - pulsecount) / tickcount
     // then extrapolate to seconds per day
-    secperday = ((((tickcount * 32768/current_ticks) - pulsecount) / tickcount)*3600*24/32768)-86400;
+    // (double)pulsecount / tickcount == average pulses per tick
+    // ((double)pulsecount / tickcount) * current_ticks == average pulses per second for current watch
+    // 32768 - above == + or - number of pulses per second too fast or too slow
+    // above * 3600*24 == + or - number of pulses per day too fast or too slow
+    // above / 32768 == number of seconds per day too fast or too slow
+    secperday = ((32768.0 - (((double)pulsecount / tickcount) * current_ticks)) * 3600.0*24.0) / 32768.0;
+    // if a 'tick' takes more than 32768/current_ticks per second, the watch is slow
+    // and a negative number means 'too slow'
+    minperday = secperday/60;
 
     lcd.clear();
-    snprintf(displaytext,sizeof(displaytext),"Signaal %d%%",quality);
-    lcd.print(displaytext);
-    lcd.setCursor(0,1);
-    snprintf(displaytext,sizeof(displaytext),"%d t/s",current_ticks);
-    lcd.print(displaytext);
+    lcd.printf("Signaal %3d%% %3d tik", quality, current_ticks);
     lcd.setCursor(0,2);
-    lcd.printf("%+06.1f sec/dag",secperday);
+
+    if(secperday >= 0)
+    {
+      if(minperday)
+      {
+        lcd.printf("+%02dm%02.0fs", minperday, secperday - (minperday *60));
+      }
+      else
+      {
+        lcd.printf("   +%02.0fs", secperday - (minperday *60));
+      }
+    }
+    else
+    {
+      if(minperday)
+      {
+        lcd.printf("-%02dm%02.0fs", minperday * -1, (secperday * -1) + (minperday *60));
+      }  
+      else
+      {
+        lcd.printf("   -%02.0fs", (secperday * -1) + (minperday *60));
+      }
+    }
     lcd.setCursor(0,3);
-    if(secperday > 0) lcd.printf("             Te snel");
-    else lcd.printf("         Te langzaam");
+    if(secperday > 0) lcd.printf("        Voor per dag");
+    else lcd.printf("      Achter per dag");
     maxsignalloss = 0; // signal present, so reset counter
   }   
 }
