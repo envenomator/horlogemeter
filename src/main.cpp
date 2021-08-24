@@ -45,12 +45,17 @@ volatile uint16_t ptt; // previously read tick time;
 
 // globals used during loop
 uint32_t tickcount, pulsecount; // used for temp reading respective counters during loop() to avoid race conditions
+
 uint8_t quality;
 uint8_t temp5, temp6, temp10, i;
 uint8_t current_ticks = 0;
 uint16_t maxsignalloss = 0;
 
+double referentie;
 double secperday;
+double verhouding;
+double delta;
+
 int minperday;
 
 LiquidCrystal_I2C lcd(0x3f,20,4);
@@ -143,7 +148,7 @@ void setup() {
   lcd.setCursor(0,1);
   lcd.printf("|   Horlogemeter   |");
   lcd.setCursor(0,2);
-  lcd.printf("|   Versie 2.1     |");
+  lcd.printf("|   Versie 2.2     |");
   lcd.setCursor(0,3);
   lcd.printf("+------------------+");
   delay(1000);
@@ -207,16 +212,15 @@ void loop() {
   }
   else
   {
-    // valid signal and average, calculate and print out results
-    // then extrapolate to seconds per day
-    // (double)pulsecount / tickcount == average pulses per tick
-    // ((double)pulsecount / tickcount) * current_ticks == average pulses per second for current watch
-    // 32768 - above == + or - number of pulses per second too fast or too slow
-    // above * 3600*24 == + or - number of pulses per day too fast or too slow
-    // above / 32768 == number of seconds per day too fast or too slow
-    secperday = ((32768.0 - (((double)pulsecount / tickcount) * current_ticks)) * 3600.0*24.0) / 32768.0;
     // if a 'tick' takes more than 32768/current_ticks per second, the watch is slow
     // and a negative number means 'too slow'
+
+    referentie = (32768.0 / current_ticks) * tickcount;
+    delta = referentie - pulsecount;
+    verhouding = (double) delta / referentie;
+
+    secperday = verhouding * 3600 * 24;
+
     minperday = secperday/60;
 
     lcd.clear();
@@ -248,6 +252,7 @@ void loop() {
     lcd.setCursor(0,3);
     if(secperday > 0) lcd.printf("        Voor per dag");
     else lcd.printf("      Achter per dag");
+    
     maxsignalloss = 0; // signal present, so reset counter
   }   
 }
